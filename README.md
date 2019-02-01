@@ -4,7 +4,7 @@ This repository contains **Dockerfile** for internal SFTP docker with adls fuse 
 
 ## Informations
 
-* Based on Python (3.6-slim) official Image [ubuntu:16.04](https://hub.docker.com/_/ubuntu) 
+* Based on Ubuntu official Image [ubuntu:16.04](https://hub.docker.com/_/ubuntu) 
 * Install [Docker](https://www.docker.com/)
 * Install [Docker Compose](https://docs.docker.com/compose/install/)
 
@@ -18,6 +18,7 @@ For Building the docker image for xsftp you first need to build the docker image
 ## Usage
 
 Run the container using docker run 
+
     docker run -p 2222:22 -v /home/exa00015/mount/conf:/etc/hadoop/conf -e MOUNT_POINT=/home/abssftp/mount -e ABFS_URI=abfs://xana-sprk-itds-dev-wus@absitdsdevwus001.dfs.core.windows.net -d --privileged xsftp:1.0.0 abssftp:pass:::mount
 
 # Issues
