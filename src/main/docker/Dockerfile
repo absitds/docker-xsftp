@@ -1,14 +1,3 @@
-# VERSION 1.0.0
-# AUTHOR: Exadatum
-# DESCRIPTION: Cloudera hue with Adls Fuse
-
-
-# Build
-# docker build -t  adls_fuse:1.0.0 .
-
-# Create container
-# docker run -it -d -v  /home/exa00015/fuse/conf/:/etc/hadoop/conf/  -e ABFS_URI=abfs://sprk-itds-dev-wus-2019-01-23t04-24-36-227z@absitdsdevwus001.dfs.core.windows.net --privileged adls_fuse:1.0.0
-
 FROM ubuntu:16.04
 LABEL maintainer="exadatum_"
 
@@ -41,4 +30,25 @@ RUN echo "deb ${CDH_REPO_URI} ${CDH_RELEASE_NAME} contrib" >> /etc/apt/sources.l
  && apt-key add archive.key \
  && apt-get update -yqq \
  && apt-get install hadoop hadoop-hdfs libhdfs0 openssl hadoop-hdfs-fuse -yqq
+
+# Steps done in one RUN layer:
+# - Install packages
+# - OpenSSH needs /var/run/sshd to run
+# - Remove generic host keys, entrypoint generates unique keys
+RUN apt-get update && \
+    apt-get -y install openssh-server && \
+    rm -rf /var/lib/apt/lists/* && \
+    mkdir -p /var/run/sshd && \
+    rm -f /etc/ssh/ssh_host_*key*
+
+COPY files/sshd_config /etc/ssh/sshd_config
+COPY files/scripts/create-sftp-user /usr/local/bin/
+COPY files/scripts/entrypoint.sh /
+COPY files/sshd /etc/pam.d/sshd
+
+RUN chmod +x /entrypoint.sh
+
+EXPOSE 22
+
+ENTRYPOINT ["/entrypoint.sh"]
 
