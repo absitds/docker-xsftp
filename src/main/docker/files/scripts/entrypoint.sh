@@ -6,10 +6,13 @@ mount_adls_gen2() {
    abfs_uri="${1}"
 
    mount_point="${2}"
+   
+   user="${3}"
 
    mkdir -p ${mount_point}
 
    /usr/bin/hadoop-fuse-dfs ${abfs_uri} ${mount_point} -d
+   chown -R "$user:sftpusers" ${mount_point}
 
 }
 
@@ -109,5 +112,5 @@ else
 fi
 
 
-mount_adls_gen2 ${ABFS_URI} ${MOUNT_POINT}
+mount_adls_gen2 ${ABFS_URI} ${MOUNT_POINT} ${user}
 
