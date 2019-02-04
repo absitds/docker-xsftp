@@ -98,10 +98,10 @@ if [ -n "$dir" ]; then
         if [ ! -d "$dirPath" ]; then
             log "Creating directory: $dirPath"
             mkdir -p "$dirPath"
-            chown -R "$uid:sftpusers" "$dirPath"
         else
             log "Directory already exists: $dirPath"
         fi
+        chown -R "$uid:sftpusers" "$dirPath"
         chmod -R 300 "$dirPath"
     done
 fi
